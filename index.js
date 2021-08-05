@@ -17,7 +17,7 @@ class Player {
   }
   draw() {
     ctx.beginPath();
-    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 3, false);
+    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
     ctx.fillStyle = this.color;
     ctx.fill();
   }
@@ -33,7 +33,7 @@ class Projectile {
   }
   draw() {
     ctx.beginPath();
-    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 3, false);
+    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
     ctx.fillStyle = this.color;
     ctx.fill();
   }
@@ -53,7 +53,7 @@ class Enemy {
   }
   draw() {
     ctx.beginPath();
-    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 3, false);
+    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
     ctx.fillStyle = this.color;
     ctx.fill();
   }
@@ -95,22 +95,11 @@ class Particle {
 const x = canvas.width / 2;
 const y = canvas.height / 2;
 
-/* const projectile = new Projectile(
-    canvas.width / 2,
-    canvas.height / 2,
-    5,
-    "red",
-    {
-        x: 1,
-        y: 1,
-    }
-    ); */
-
-//Se generan los proyectiles
 let player = new Player(x, y, 30, "white");
 let projectiles = [];
 let enemies = [];
 let particles = [];
+let Difficulty = 800;
 
 function init() {
   player = new Player(x, y, 30, "white");
@@ -120,10 +109,11 @@ function init() {
   projectiles = [];
   enemies = [];
   particles = [];
+  Difficulty = 800;
 }
 
 function spawnEnemies() {
-  setInterval(() => {
+  function SpawnEnemy() {
     const radius = Math.random() * (30 - 7) + 7;
 
     let x, y;
@@ -141,8 +131,13 @@ function spawnEnemies() {
       x: Math.cos(angle),
       y: Math.sin(angle),
     };
+    intervalVelocity = setInterval(() => {
+      velocity.x *= 2;
+      velocity.y *= 2;
+    }, 3000);
     enemies.push(new Enemy(x, y, radius, color, velocity));
-  }, 1000);
+  }
+  interval = setInterval(SpawnEnemy, Difficulty);
 }
 
 let animationId;
@@ -184,6 +179,8 @@ function animate() {
       cancelAnimationFrame(animationId);
       container.style.display = "flex";
       scoreTotal.innerHTML = score;
+      enemies = [];
+      clearInterval(interval);
     }
     //Proyectil vs enemigo
     projectiles.forEach((projectile, projectileIndex) => {
