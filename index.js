@@ -131,10 +131,6 @@ function spawnEnemies() {
       x: Math.cos(angle),
       y: Math.sin(angle),
     };
-    intervalVelocity = setInterval(() => {
-      velocity.x *= 2;
-      velocity.y *= 2;
-    }, 3000);
     enemies.push(new Enemy(x, y, radius, color, velocity));
   }
   interval = setInterval(SpawnEnemy, Difficulty);
